@@ -2,14 +2,13 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import { toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from 'react-router-dom'
-import { api } from '../../Services/api'
 import { DivContainerFormLogin, FormLogin } from './StyleLoginForm'
 import { Headline, Title1 } from '../../Styles/typography'
 import { InputStyled } from '../../Styles/inputs'
 import { ButtonGrey, ButtonPink } from '../../Styles/buttons'
+import { useContext } from 'react'
+import { UserContext } from '../../providers/UserContext'
 
 
 const Loginform = () => {
@@ -20,22 +19,8 @@ const Loginform = () => {
   })
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(formSchema) });
-  const navigate = useNavigate()
-  const loginUser = async (data) => {
-    console.log(data)
-    try {
-      const response = await api.post("/sessions", data)
-      toast.success("Login efetuado com sucesso")
-      localStorage.setItem("@TOKEN", response.data.token)
-      localStorage.setItem("@USERID", response.data.user.id)
-      console.log(response.data)
-      navigate("/dashboard")
 
-    } catch (error) {
-      console.log(error)
-      toast.error("Ops, algo deu errado")
-    }
-  }
+  const { navigate, loginUser } = useContext(UserContext)
 
   return (
     <>

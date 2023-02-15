@@ -1,16 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver} from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import { useNavigate } from 'react-router-dom'
-import { api } from '../../Services/api'
-import {toast} from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { DivContainerFormRegister, FormRegister } from './StylesRegisterForm'
 import { Headline, Title1 } from '../../Styles/typography'
 import { InputStyled } from '../../Styles/inputs'
 import { SelectStyled } from '../../Styles/selectStyle'
 import { ButtonPink } from '../../Styles/buttons'
+import { UserContext } from '../../providers/UserContext';
 
 
 
@@ -28,22 +26,8 @@ const RegisterForm = () => {
     })
 
     const {register, handleSubmit, formState:{errors}} = useForm({resolver: yupResolver(formSchema)});
-    const navigate = useNavigate()
     
-    const registerUser = async (data)=> {
-      console.log(data)
-      try{
-       const response = await api.post("/users", data)
-        navigate("/")
-        toast.success("Usuário cadastrado com sucesso")
-        console.log(response.data)
-        
-      }catch(error){
-        console.log(error)
-        toast.error(error.message)
-      }
-    }
-
+    const { registerUser } = useContext(UserContext)
 
   return (
     <DivContainerFormRegister>

@@ -2,7 +2,7 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import AppRoutes from './Routes';
 import { DivApp } from './Styles/appStyle';
-import { GlobalStyle } from './Styles/globalStyles';
+
 
 function App() {
 

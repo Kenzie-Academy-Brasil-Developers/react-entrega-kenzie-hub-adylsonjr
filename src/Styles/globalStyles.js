@@ -46,6 +46,6 @@ export const GlobalStyle = createGlobalStyle`
  }
 
  body{
-   background-color: #000000;
+   background-color: var(--grey-4);
  }
  `

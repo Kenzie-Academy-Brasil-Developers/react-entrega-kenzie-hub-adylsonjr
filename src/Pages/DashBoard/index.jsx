@@ -1,39 +1,14 @@
-import React from 'react'
-import { useEffect } from 'react'
-import { api } from '../../Services/api'
-import { useState } from 'react'
-import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
+import React, { useContext } from 'react'
 import logo from "../../assets/Logo.png"
 import { ButtonBlack } from '../../Styles/buttons'
 import { Headline, HeadlineDash, Title1 } from '../../Styles/typography'
 import { DivContainerDashBoardPage, DivDashBoard, DivUserInfos, HeaderDashBoard } from './StylesDashBoardPage'
+import { UserContext } from '../../providers/UserContext'
 
 const DashBoardPage = () => {
 
-  const [user, setUser] = useState([])
 
-  useEffect(() => {
-    const loadingUser = async () => {
-
-      try {
-        const response = await api.get(`/users/${localStorage.getItem("@USERID")}`)
-        setUser(response.data)
-        console.log(response)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    loadingUser()
-
-  }, [])
-
-  const navigate = useNavigate()
-
-  const logout = () => {
-    localStorage.clear()
-    navigate("/")
-  }
+  const {logout, atualUser} = useContext(UserContext)
 
   return (
     <DivContainerDashBoardPage>
@@ -42,8 +17,8 @@ const DashBoardPage = () => {
         <ButtonBlack className='buttonLogout' onClick={() => logout()}>sair</ButtonBlack>
       </HeaderDashBoard>
       <DivUserInfos>
-      <Title1>Olá, {user.name}</Title1>
-      <Headline>{user.course_module}</Headline>
+      <Title1>Olá, {atualUser.name}</Title1>
+      <Headline>{atualUser.course_module}</Headline>
       </DivUserInfos>
       <DivDashBoard>
       <Title1>Que pena! Estamos em desenvolvimento :(</Title1>
