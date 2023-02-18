@@ -1,80 +1,179 @@
-import { createContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import { api } from "../Services/api";
 import { toast } from "react-toastify";
-import { useState } from "react";
-import { useEffect } from "react";
+
+
 
 export const UserContext = createContext({})
 
 export const UserProvider = ({ children }) => {
 
-    const navigate = useNavigate()
+  const [atualUser, setAtualUser] = useState(null)
 
-    const registerUser = async (data)=> {
-        console.log(data)
-        try{
-         const response = await api.post("/users", data)
-          navigate("/")
-          toast.success("Usuário cadastrado com sucesso")
-          console.log(response.data)
-          
-        }catch(error){
-          console.log(error)
-          toast.error(error.message)
-        }
-      }
+  const [modalAddIsOpen, setModalAddIsOpen] = useState(false)
 
-    const loginUser = async (data) => {
-        console.log(data)
-        try {
-            const response = await api.post("/sessions", data)
-            toast.success("Login efetuado com sucesso")
-            localStorage.setItem("@TOKEN", response.data.token)
-            localStorage.setItem("@USERID", response.data.user.id)
-            console.log(response.data)
-            navigate("/dashboard")
+  const [modalSetIsOpen, setModalSetIsOpen] = useState(false)
 
-        } catch (error) {
-            console.log(error)
-            toast.error("Ops, algo deu errado")
-        }
-    }
+  const [techs, setTechs] = useState([])
 
-  const [atualUser, setAtualUser] = useState({})
+  const [editTech, setEditTech] = useState(null)
 
   useEffect(() => {
-    const loadingUser = async () => {
-
-      try {
-        const response = await api.get(`/users/${localStorage.getItem("@USERID")}`)
-        console.log(response)
-        setUser(response.data)
-      } catch (error) {
-        console.log(error)
+    const token = localStorage.getItem("@TOKEN")
+    if (token) {
+      const loadingUser = async () => {
+        try {
+          const response = await api.get("/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          setAtualUser(response.data)
+          setTechs(response.data.techs)
+          navigate("/dashboard")
+        } catch (error) {
+          console.log(error)
+          localStorage.removeItem("@TOKEN")
+        }
       }
+      loadingUser()
     }
-    loadingUser()
 
   }, [])
 
-  
+  const navigate = useNavigate()
+
+  const registerUser = async (data) => {
+    console.log(data)
+    try {
+      const response = await api.post("/users", data)
+      navigate("/")
+      toast.success("Usuário cadastrado com sucesso")
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
+  }
+
+  const loginUser = async (data) => {
+    try {
+      const response = await api.post("/sessions", data)
+      setAtualUser(response.data.user)
+      setTechs(response.data.user.techs)
+      localStorage.setItem("@TOKEN", response.data.token)
+      localStorage.setItem("@USERID", response.data.user.id)
+      navigate("/dashboard")
+      toast.success("Login efetuado com sucesso")
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
+  }
 
   const logout = () => {
-    localStorage.clear()
+    localStorage.removeItem("@TOKEN")
+    setAtualUser(null)
     navigate("/")
   }
 
-    return (
-        <UserContext.Provider value={{
-            loginUser,
-            navigate,
-            registerUser,
-            loginUser,
-            logout,
-            atualUser
-        }} >
-            {children}
-        </UserContext.Provider>
-    )
+  const createTech = async (data) => {
+    const token = localStorage.getItem("@TOKEN")
+    try {
+      const response = await api.post("/users/techs", data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setTechs([...techs, response.data])
+      toast.success("Técnologia criada com sucesso")
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
+  }
+
+  const upDateTech = async (id, data) => {
+    const token = localStorage.getItem("@TOKEN")
+    try {
+      const response = await api.put(`/users/techs/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const newTechs = techs.map(tech => {
+        if (id === tech.id) {
+          return [...techs, response.data]
+        } else {
+          return techs
+        }
+      })
+      setTechs(newTechs)
+      toast.success("Técnologia atualizada")
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response)
+    }
+  }
+
+  const deleteTech = async (id) => {
+    const token = localStorage.getItem("@TOKEN")
+    try {
+      const response = await api.delete(`/users/techs/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const newTechs = techs.filter(tech=> tech.id !== id);
+      setTechs(newTechs)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const openModalAdd = () => {
+    setModalAddIsOpen(true)
+  }
+
+  const closeModalAdd = () => {
+    setModalAddIsOpen(false)
+  }
+
+  const openModalSet = () => {
+    setModalSetIsOpen(true)
+
+  }
+
+  const closeModalSet = () => {
+    setModalSetIsOpen(false)
+  }
+
+
+  return (
+    <UserContext.Provider value={{
+      atualUser,
+      loginUser,
+      navigate,
+      registerUser,
+      logout,
+      setAtualUser,
+      modalAddIsOpen,
+      modalSetIsOpen,
+      createTech,
+      upDateTech,
+      openModalAdd,
+      closeModalAdd,
+      openModalSet,
+      closeModalSet,
+      techs,
+      editTech,
+      setEditTech,
+      deleteTech
+    }} >
+      {children}
+    </UserContext.Provider>
+  )
 }

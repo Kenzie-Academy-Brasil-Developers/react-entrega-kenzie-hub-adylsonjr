@@ -18,15 +18,20 @@ const Loginform = () => {
     password: yup.string().required("Senha Obrigatória"),
   })
 
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(formSchema) });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: yupResolver(formSchema) });
 
   const { navigate, loginUser } = useContext(UserContext)
+
+  const submit = (formData)=>{
+    loginUser(formData);
+    reset()
+  }
 
   return (
     <>
       <DivContainerFormLogin>
         <Title1>Login</Title1>
-        <FormLogin onSubmit={handleSubmit(loginUser)}>
+        <FormLogin onSubmit={handleSubmit(submit)}>
           <label>Email</label>
           <InputStyled placeholder='Email' {...register("email")} />
           {errors.email?.message}

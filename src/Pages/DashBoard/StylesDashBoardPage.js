@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const DivContainerDashBoardPage = styled.div`
     padding: 1.5rem;
+    
     @media (min-width: 768px){
         padding: 0px 210px;
         width: 100%;
@@ -33,4 +34,41 @@ export const DivUserInfos = styled.div`
 export const DivDashBoard = styled.div`
     gap: 20px;
     margin-top: 50px;
+    width: 100%;
+`
+export const DivTechs = styled.div`
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem;
+    .btnTechs{
+        padding: 0rem 2rem;
+        font-size: large;
+    }
+`
+export const TechsList = styled.ul`
+    width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+`
+export const TechCard = styled.li`
+    background-color: var(--grey-3);
+    border-radius: 4px;
+    padding: 2rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+     :hover{
+        background-color: var(--grey-2) ;
+     }
+`
+export const ButtonTech = styled.button`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 `

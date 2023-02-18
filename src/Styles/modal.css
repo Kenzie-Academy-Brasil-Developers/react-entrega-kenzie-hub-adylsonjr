@@ -1,0 +1,35 @@
+.modal-overlay{
+    background: transparent;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-add-tech{
+    width: 90%;
+    max-width: 360px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.modal-set-overlay{
+    background: transparent;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-set-tech{
+    width: 90%;
+    max-width: 360px;
+    padding: 10px;
+    border-radius: 5px;
+}

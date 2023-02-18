@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { GlobalStyle } from './Styles/globalStyles'
 import { BrowserRouter } from 'react-router-dom'
-import {  UserProvider } from './providers/UserContext'
+import Providers from './providers/providers'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserProvider>
+      <Providers>
         <GlobalStyle />
         <App />
-      </UserProvider>
+      </Providers>
     </BrowserRouter>
   </React.StrictMode>,
 )

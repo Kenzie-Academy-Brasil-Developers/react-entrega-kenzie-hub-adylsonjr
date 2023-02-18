@@ -25,15 +25,20 @@ const RegisterForm = () => {
       course_module: yup.string().required("Selecione uma opção")
     })
 
-    const {register, handleSubmit, formState:{errors}} = useForm({resolver: yupResolver(formSchema)});
+    const {register, handleSubmit, formState:{errors}, reset} = useForm({resolver: yupResolver(formSchema)});
     
     const { registerUser } = useContext(UserContext)
+
+    const submit = (formData)=>{
+      registerUser(formData);
+      reset() 
+    }
 
   return (
     <DivContainerFormRegister>
     <Title1>Crie sua conta</Title1>
     <Headline>Rápido e grátis, vamos nessa</Headline>
-    <FormRegister onSubmit={handleSubmit(registerUser)}>
+    <FormRegister onSubmit={handleSubmit(submit)}>
         <label>Nome</label>
         <InputStyled placeholder='Nome' {...register("name")} />
         {errors.name && errors.name.message}
