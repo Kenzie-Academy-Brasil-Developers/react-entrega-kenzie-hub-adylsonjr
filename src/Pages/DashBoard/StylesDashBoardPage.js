@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 export const DivContainerDashBoardPage = styled.div`
     padding: 1.5rem;
+    width: 100%;
     
     @media (min-width: 768px){
-        padding: 0px 210px;
         width: 100%;
+        padding: 0px 210px;
     }
 `
 export const HeaderDashBoard = styled.header`
