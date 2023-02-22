@@ -1,9 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import { api } from "../Services/api";
 import { toast } from "react-toastify";
-
-
 
 export const UserContext = createContext({})
 
@@ -11,15 +9,9 @@ export const UserProvider = ({ children }) => {
 
   const [atualUser, setAtualUser] = useState(null)
 
-  const [modalAddIsOpen, setModalAddIsOpen] = useState(false)
-
-  const [modalSetIsOpen, setModalSetIsOpen] = useState(false)
-
   const [techs, setTechs] = useState([])
 
-  const [editTech, setEditTech] = useState(null)
-
-  useEffect(() => {
+  const getUser = ()=>{
     const token = localStorage.getItem("@TOKEN")
     if (token) {
       const loadingUser = async () => {
@@ -39,13 +31,15 @@ export const UserProvider = ({ children }) => {
       }
       loadingUser()
     }
+  }
 
+  useEffect(() => {
+   getUser()
   }, [])
 
   const navigate = useNavigate()
 
   const registerUser = async (data) => {
-    console.log(data)
     try {
       const response = await api.post("/users", data)
       navigate("/")
@@ -79,78 +73,6 @@ export const UserProvider = ({ children }) => {
     navigate("/")
   }
 
-  const createTech = async (data) => {
-    const token = localStorage.getItem("@TOKEN")
-    try {
-      const response = await api.post("/users/techs", data, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setTechs([...techs, response.data])
-      toast.success("Técnologia criada com sucesso")
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response.data.message)
-    }
-  }
-
-  const upDateTech = async (id, data) => {
-    const token = localStorage.getItem("@TOKEN")
-    try {
-      const response = await api.put(`/users/techs/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      const newTechs = techs.map(tech => {
-        if (id === tech.id) {
-          return [...techs, response.data]
-        } else {
-          return techs
-        }
-      })
-      setTechs(newTechs)
-      toast.success("Técnologia atualizada")
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response)
-    }
-  }
-
-  const deleteTech = async (id) => {
-    const token = localStorage.getItem("@TOKEN")
-    try {
-      const response = await api.delete(`/users/techs/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      const newTechs = techs.filter(tech=> tech.id !== id);
-      setTechs(newTechs)
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const openModalAdd = () => {
-    setModalAddIsOpen(true)
-  }
-
-  const closeModalAdd = () => {
-    setModalAddIsOpen(false)
-  }
-
-  const openModalSet = () => {
-    setModalSetIsOpen(true)
-
-  }
-
-  const closeModalSet = () => {
-    setModalSetIsOpen(false)
-  }
-
 
   return (
     <UserContext.Provider value={{
@@ -160,18 +82,9 @@ export const UserProvider = ({ children }) => {
       registerUser,
       logout,
       setAtualUser,
-      modalAddIsOpen,
-      modalSetIsOpen,
-      createTech,
-      upDateTech,
-      openModalAdd,
-      closeModalAdd,
-      openModalSet,
-      closeModalSet,
       techs,
-      editTech,
-      setEditTech,
-      deleteTech
+      setTechs,
+      getUser
     }} >
       {children}
     </UserContext.Provider>

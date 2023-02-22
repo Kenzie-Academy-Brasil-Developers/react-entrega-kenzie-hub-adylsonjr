@@ -8,6 +8,8 @@ import Modal from "react-modal"
 import modal from "../../Styles/modal.css"
 import ModalAdd from '../../components/modalAdd'
 import ModalSet from '../../components/modalSet'
+import { TechsContext } from '../../providers/TechsContext'
+import { useEffect } from 'react'
 
 
 Modal.setAppElement("#root")
@@ -15,9 +17,12 @@ Modal.setAppElement("#root")
 
 const DashBoardPage = () => {
 
-  const { logout, atualUser, techs, openModalAdd, openModalSet, modalSetIsOpen, closeModalSet, modalAddIsOpen, closeModalAdd, setEditTech } = useContext(UserContext)
-
-
+  const { logout, atualUser, techs, getUser } = useContext(UserContext)
+  const { openModalAdd, openModalSet, modalSetIsOpen, closeModalSet, modalAddIsOpen, closeModalAdd, setEditTech } = useContext(TechsContext)
+  
+  useEffect(()=>{
+    getUser()
+  },[atualUser])
 
 
 

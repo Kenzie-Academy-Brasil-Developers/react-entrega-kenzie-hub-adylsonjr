@@ -1,22 +1,30 @@
 import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { UserContext } from '../../providers/UserContext'
+import { TechsContext } from '../../providers/TechsContext'
 import { ButtonRed, ButtonGreyModalSet } from '../../Styles/buttons'
 import { InputStyled } from '../../Styles/inputs'
 import { SelectStyled } from '../../Styles/selectStyle'
 import { Title3 } from '../../Styles/typography'
 import { ButtonCloseModalSet, DivButtonsModalSet, DivContainerModalSet, FormModalSet, HeaderModalSet } from './StylesModalSet'
+import "react-toastify/dist/ReactToastify.css";
+
 
 const ModalSet = () => {
-    const { editTech } = useContext(UserContext)
+    
 
-    const { closeModalSet, upDateTech, deleteTech } = useContext(UserContext)
+    const { closeModalSet, upDateTech, deleteTech, editTech } = useContext(TechsContext)
 
     const { register, handleSubmit, reset } = useForm()
 
     const submit = (formData) => {
         upDateTech(editTech.id, formData)
+        closeModalSet()
         reset()
+    }
+
+    const techDel = (id)=>{
+        deleteTech(id)
+        closeModalSet()
     }
 
     return (
@@ -36,7 +44,7 @@ const ModalSet = () => {
                 </SelectStyled>
                 <DivButtonsModalSet>
                     <ButtonRed type='submit'>Cadastrar Técnologia</ButtonRed>
-                    <ButtonGreyModalSet type="button" onClick={() => deleteTech(editTech.id)}>Excluir</ButtonGreyModalSet>
+                    <ButtonGreyModalSet type="button" onClick={() => techDel(editTech.id) }>Excluir</ButtonGreyModalSet>
                 </DivButtonsModalSet>
             </FormModalSet>
         </DivContainerModalSet>

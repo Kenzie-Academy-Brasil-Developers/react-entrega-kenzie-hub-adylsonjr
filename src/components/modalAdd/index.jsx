@@ -7,16 +7,17 @@ import { InputStyled } from '../../Styles/inputs'
 import { SelectStyled } from '../../Styles/selectStyle'
 import { Title3 } from '../../Styles/typography'
 import { ButtonCloseModalAdd, DivContainerModalAdd, FormModalAdd, HeaderModalAdd } from './StylesModalAdd'
-import { UserContext } from '../../providers/UserContext';
+import { TechsContext } from '../../providers/TechsContext';
 
 const ModalAdd = () => {
     
     const { register, handleSubmit, reset } = useForm();
 
-    const {createTech, closeModalAdd} = useContext(UserContext)
+    const {createTech, closeModalAdd} = useContext(TechsContext)
 
     const submit = (formData)=>{
         createTech(formData)
+        closeModalAdd()
         reset()
     }
 

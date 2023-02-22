@@ -1,13 +1,13 @@
 import React from 'react'
-// import { TechsProvider } from './TechsCotext'
-import { UserProvider } from './UserContext'
+import { UserProvider } from "./UserContext"
+import { TechsProvider } from './TechsContext'
 
 const Providers = ({ children }) => {
   return (
     <UserProvider>
-
-      {children}
-
+      <TechsProvider>
+        {children}
+      </TechsProvider>
     </UserProvider>
   )
 }
